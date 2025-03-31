@@ -17,9 +17,14 @@ atualizarLista(); // Atualiza a lista ao carregar a página
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const numero = document.getElementById("numero").value;
-    const nome = document.getElementById("nome").value;
-    const whatsapp = document.getElementById("whatsapp").value;
+    const numero = document.getElementById("numero").value.trim();
+    const nome = document.getElementById("nome").value.trim();
+    const whatsapp = document.getElementById("whatsapp").value.trim();
+
+    if (!numero || !nome || !whatsapp) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+    }
 
     if (numerosComprados[numero]) {
         alert("Esse número já foi comprado. Escolha outro.");
@@ -33,7 +38,7 @@ form.addEventListener("submit", function (event) {
 
     // Enviar os dados para o WhatsApp do administrador
     const mensagem = `Nova compra!%0A%0ANúmero: ${numero}%0ANome: ${nome}%0AWhatsApp: ${whatsapp}`;
-    window.open(`https://wa.me/${adminWhatsApp}?text=${mensagem}`, "_blank");
+    window.location.href = `https://wa.me/${adminWhatsApp}?text=${mensagem}`;
 
     form.reset();
 });
