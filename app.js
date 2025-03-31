@@ -1,81 +1,31 @@
-let pendingNumbers = [];
-let soldNumbers = [];
+document.addEventListener("DOMContentLoaded", function () { const form = document.getElementById("compra-form"); const lista = document.getElementById("numeros-lista"); const numerosComprados = {}; const adminWhatsApp = "61991641211"; // Seu número de WhatsApp
 
-function purchaseNumber() {
-    const chosenNumber = document.getElementById("chosenNumber").value;
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    if (!chosenNumber || chosenNumber.length !== 4 || isNaN(chosenNumber)) {
-        alert("Por favor, insira um número de 4 dígitos válido.");
+    const numero = document.getElementById("numero").value;
+    const nome = document.getElementById("nome").value;
+    const whatsapp = document.getElementById("whatsapp").value;
+
+    if (numerosComprados[numero]) {
+        alert("Esse número já foi comprado. Escolha outro.");
         return;
     }
 
-    if (pendingNumbers.includes(chosenNumber) || soldNumbers.includes(chosenNumber)) {
-        alert("Esse número já foi comprado ou está pendente!");
-        return;
-    }
+    numerosComprados[numero] = { nome, whatsapp };
 
-    pendingNumbers.push(chosenNumber);
-    updatePendingNumbers();
-    document.getElementById("chosenNumber").value = "";
-}
+    const item = document.createElement("li");
+    item.innerHTML = `${numero} - ${nome} <a href="https://wa.me/${whatsapp}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" alt="WhatsApp">
+    </a>`;
+    lista.appendChild(item);
 
-function updatePendingNumbers() {
-    const pendingNumbersDiv = document.getElementById("pendingNumbers");
-    pendingNumbersDiv.innerHTML = "";
+    // Enviar os dados para o WhatsApp do administrador
+    const mensagem = `Nova compra!%0A%0ANúmero: ${numero}%0ANome: ${nome}%0AWhatsApp: ${whatsapp}`;
+    window.open(`https://wa.me/${adminWhatsApp}?text=${mensagem}`, "_blank");
 
-    pendingNumbers.forEach(number => {
-        const numberDiv = document.createElement("div");
-        numberDiv.classList.add("number", "pending");
-        numberDiv.textContent = number;
-        const confirmButton = document.createElement("button");
-        confirmButton.textContent = "Confirmar";
-        confirmButton.classList.add("confirm");
-        confirmButton.onclick = () => confirmNumber(number);
-        const denyButton = document.createElement("button");
-        denyButton.textContent = "Negar";
-        denyButton.classList.add("deny");
-        denyButton.onclick = () => denyNumber(number);
-        numberDiv.appendChild(confirmButton);
-        numberDiv.appendChild(denyButton);
-        pendingNumbersDiv.appendChild(numberDiv);
-    });
-}
+    form.reset();
+});
 
-function confirmNumber(number) {
-    pendingNumbers = pendingNumbers.filter(num => num !== number);
-    soldNumbers.push(number);
-    updatePendingNumbers();
-    updateAdminPanel();
-}
+});
 
-function denyNumber(number) {
-    pendingNumbers = pendingNumbers.filter(num => num !== number);
-    updatePendingNumbers();
-    updateAdminPanel();
-}
-
-function updateAdminPanel() {
-    const adminPendingNumbers = document.getElementById("adminPendingNumbers");
-    const adminSoldNumbers = document.getElementById("adminSoldNumbers");
-
-    adminPendingNumbers.innerHTML = "";
-    adminSoldNumbers.innerHTML = "";
-
-    pendingNumbers.forEach(number => {
-        const li = document.createElement("li");
-        li.textContent = number;
-        adminPendingNumbers.appendChild(li);
-    });
-
-    soldNumbers.forEach(number => {
-        const li = document.createElement("li");
-        li.textContent = number;
-        adminSoldNumbers.appendChild(li);
-    });
-}
-
-function showAdminPanel() {
-    const adminPanel = document.getElementById("adminPanel");
-    adminPanel.style.display = 'block';
-    updateAdminPanel();
-}
