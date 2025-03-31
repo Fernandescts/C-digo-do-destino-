@@ -1,135 +1,81 @@
 let pendingNumbers = [];
-
 let soldNumbers = [];
 
 function purchaseNumber() {
-
     const chosenNumber = document.getElementById("chosenNumber").value;
 
     if (!chosenNumber || chosenNumber.length !== 4 || isNaN(chosenNumber)) {
-
         alert("Por favor, insira um número de 4 dígitos válido.");
-
         return;
-
     }
 
     if (pendingNumbers.includes(chosenNumber) || soldNumbers.includes(chosenNumber)) {
-
         alert("Esse número já foi comprado ou está pendente!");
-
         return;
-
     }
 
     pendingNumbers.push(chosenNumber);
-
     updatePendingNumbers();
-
     document.getElementById("chosenNumber").value = "";
-
 }
 
 function updatePendingNumbers() {
-
     const pendingNumbersDiv = document.getElementById("pendingNumbers");
-
     pendingNumbersDiv.innerHTML = "";
 
     pendingNumbers.forEach(number => {
-
         const numberDiv = document.createElement("div");
-
         numberDiv.classList.add("number", "pending");
-
         numberDiv.textContent = number;
-
         const confirmButton = document.createElement("button");
-
         confirmButton.textContent = "Confirmar";
-
         confirmButton.classList.add("confirm");
-
         confirmButton.onclick = () => confirmNumber(number);
-
         const denyButton = document.createElement("button");
-
         denyButton.textContent = "Negar";
-
         denyButton.classList.add("deny");
-
         denyButton.onclick = () => denyNumber(number);
-
         numberDiv.appendChild(confirmButton);
-
         numberDiv.appendChild(denyButton);
-
         pendingNumbersDiv.appendChild(numberDiv);
-
     });
-
 }
 
 function confirmNumber(number) {
-
     pendingNumbers = pendingNumbers.filter(num => num !== number);
-
     soldNumbers.push(number);
-
     updatePendingNumbers();
-
     updateAdminPanel();
-
 }
 
 function denyNumber(number) {
-
     pendingNumbers = pendingNumbers.filter(num => num !== number);
-
     updatePendingNumbers();
-
     updateAdminPanel();
-
 }
 
 function updateAdminPanel() {
-
     const adminPendingNumbers = document.getElementById("adminPendingNumbers");
-
     const adminSoldNumbers = document.getElementById("adminSoldNumbers");
 
     adminPendingNumbers.innerHTML = "";
-
     adminSoldNumbers.innerHTML = "";
 
     pendingNumbers.forEach(number => {
-
         const li = document.createElement("li");
-
         li.textContent = number;
-
         adminPendingNumbers.appendChild(li);
-
     });
 
     soldNumbers.forEach(number => {
-
         const li = document.createElement("li");
-
         li.textContent = number;
-
         adminSoldNumbers.appendChild(li);
-
     });
-
 }
 
 function showAdminPanel() {
-
     const adminPanel = document.getElementById("adminPanel");
-
     adminPanel.style.display = 'block';
-
     updateAdminPanel();
-
 }
