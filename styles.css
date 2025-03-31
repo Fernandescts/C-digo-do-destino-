@@ -49,18 +49,29 @@ button:hover {
 ul {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-li {
+ul li {
     background: white;
     margin: 5px;
     padding: 10px;
     border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 300px;
-    margin: auto;
+    cursor: pointer;
+    width: 50px;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+ul li.disponivel:hover {
+    background-color: #ddd;
+}
+
+ul li.selected {
+    background-color: #28a745;
+    color: white;
 }
 
 footer {
